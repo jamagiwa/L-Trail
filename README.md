@@ -37,7 +37,9 @@ pip install -r requirements.txt
 
 ## Dependencies
 * Python >= 3.8
-* `numpy`, `pandas`, `scipy`, `scikit-learn`, `scanpy`, `anndata`, `scvelo`, `leidenalg`
+* `numpy`, `pandas`, `scipy`, `scikit-learn`, `scanpy`, `anndata`, `scvelo`, `leidenalg`, `igraph`, `matplotlib`, `scikit-misc`
+
+
 
 ## Quick Start & Tutorial
 We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
