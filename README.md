@@ -14,16 +14,16 @@ Rather than modeling single-cell kinetics, L-Trail captures the distributional a
 ## Key Features
 * **Macroscopic Trajectory Inference**: Unlike RNA velocity, which models single-cell kinetics, L-Trail focuses on the macroscopic dynamics of cell populations. It infers the directional transition vectors for entire cell clusters based on their spatial distribution.
 * **Splicing-Independent**: Because it relies entirely on the geometric asymmetry of the data (the "comet tail" effect) rather than mRNA splicing kinetics, L-Trail can be applied directly to standard, static gene expression matrices without the need for unspliced reads.
-* **Robustness against Noise**: Single-cell data is inherently sparse and noisy. Instead of conventional central moments (e.g., Pearson's skewness) which are highly sensitive to outliers, L-Trail utilizes L-moments—linear combinations of order statistics. This provides a highly robust estimation of directional biases, effectively filtering out technical noise.
+* **Robustness against Noise**: Single-cell data is inherently sparse and noisy. Instead of conventional central moments (e.g., Pearson's skewness) which are susceptible to outliers, L-Trail utilizes L-moments—linear combinations of order statistics. This provides a robust estimation of directional biases, mitigating the impact of technical noise.
 
 ## Installation
 
 Currently, L-Trail can be installed by cloning this repository.
 
 ```bash
-!git clone [https://github.com/jamagiwa/L-Trail.git](https://github.com/jamagiwa/L-Trail.git)
-%cd L-Trail
-!pip install -r requirements.txt
+git clone [https://github.com/jamagiwa/L-Trail.git](https://github.com/jamagiwa/L-Trail.git)
+cd L-Trail
+pip install -r requirements.txt
 ```
 
 ## Dependencies
@@ -35,7 +35,7 @@ We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from da
 [Interactive Colab Tutorial] You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
 
 Basic Usage Example
-```bash
+```python
 import scanpy as sc
 import sys
 # Adjust to your cloned directory
@@ -63,10 +63,10 @@ pl.plot_ltrail(
 )
 ```
 
-##Repository Structure
+## Repository Structure
 ltrail/tl.py: Core algorithms for L-moment computation and vector estimation.
 
 ltrail/pl.py: Functions for visualizing L-Trail vectors on 2D embeddings (e.g., PCA, UMAP).
 
-##Licence
-This project is licensed under the MIT License.
+## Licence
+This project is licensed under the MIT License - see the LICENSE file for details.
