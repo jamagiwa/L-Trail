@@ -138,7 +138,7 @@ def _test_significance_high_dim(
     observed_magnitude: float,
     method: str,
     n_boot: int = 1000, 
-    random_state; int = 34
+    random_state: int = 34
 ) -> float:
     """
     Perform a permutation test to calculate the statistical significance (p-value) of the directional vector.
