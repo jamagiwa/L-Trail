@@ -4,6 +4,7 @@ import scanpy as sc
 from sklearn.neighbors import NearestNeighbors
 import pandas as pd
 import seaborn as sns
+from ltrail import tl
 
 #-----------------------------------------------
 def plot_ltrail(adata,
@@ -142,7 +143,7 @@ def plot_ltrail(adata,
 
         try:
             # Step A: Calculate vector in high-dimensional space
-            mean_high, vec_high = _calc_high_dim_vector(subset_high, method=method)
+            mean_high, vec_high =tl._calc_high_dim_vector(subset_high, method=method)
             magnitude = np.sqrt(np.sum(vec_high**2))
 
             # Step B: Significance test
@@ -150,7 +151,7 @@ def plot_ltrail(adata,
                 if magnitude < 1e-6:
                     continue
 
-                p_val = _test_significance_high_dim(subset_high,
+                p_val = tl._test_significance_high_dim(subset_high,
                                                     observed_magnitude=magnitude,
                                                     method=method,
                                                     n_boot=n_boot)
