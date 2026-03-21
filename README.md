@@ -25,3 +25,48 @@ Currently, L-Trail can be installed by cloning this repository.
 %cd L-Trail
 !pip install -r requirements.txt
 ```
+
+## Dependencies
+Python >= 3.8
+numpy, pandas, scipy, scikit-learn, scanpy, anndata, scvelo, leidenalg
+
+## Quick Start & Tutorial
+We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
+[Interactive Colab Tutorial] You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
+
+Basic Usage Example
+```bash
+import scanpy as sc
+import sys
+# Adjust to your cloned directory
+sys.path.append('/path/to/L-Trail') 
+from ltrail import tl, pl
+
+# Load your AnnData object (assuming standard preprocessing and PCA/UMAP are already computed)
+adata = sc.read_h5ad("your_data.h5ad")
+
+# Calculate L-Trail similarities in high-dimensional space
+df_results = tl.calc_knn_similarity(
+    adata=adata,
+    groupby='clusters',
+    use_rep='X_pca',
+    method='lmoment'
+)
+
+# Visualize vectors on embeddings
+pl.plot_ltrail(
+    adata,
+    groupby='clusters',
+    basis='X_umap',
+    use_rep='X_pca',
+    method='lmoment'
+)
+```
+
+##Repository Structure
+ltrail/tl.py: Core algorithms for L-moment computation and vector estimation.
+
+ltrail/pl.py: Functions for visualizing L-Trail vectors on 2D embeddings (e.g., PCA, UMAP).
+
+##Licence
+This project is licensed under the MIT License.
