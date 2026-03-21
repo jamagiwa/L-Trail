@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ## Quick Start & Tutorial
 We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
-[Interactive Colab Tutorial](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
+* [Interactive Colab Tutorial](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the demonstration of the Pancreas dataset directly in your browser without any local setup.
 
 Basic Usage Example
 ```python
@@ -72,9 +72,9 @@ pl.plot_ltrail(
 ```
 
 ## Repository Structure
-ltrail/tl.py: Core algorithms for L-moment computation and vector estimation.
+* `ltrail/tl.py`: Core algorithms for L-moment computation and vector estimation.
 
-ltrail/pl.py: Functions for visualizing L-Trail vectors on 2D embeddings (e.g., PCA, UMAP).
+* `ltrail/pl.py`: Functions for visualizing L-Trail vectors on 2D embeddings (e.g., PCA, UMAP).
 
 ## Citation
 A manuscript describing L-Trail is currently in preparation. In the meantime, if you use this tool in your research, please cite this GitHub repository:
