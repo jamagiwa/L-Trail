@@ -137,7 +137,7 @@ def _test_significance_high_dim(
     subset: np.ndarray,
     observed_magnitude: float,
     method: str,
-    n_boot: int = 1000
+    n_boot: int = 1000, 
     random_state; int = 34
 ) -> float:
     """
