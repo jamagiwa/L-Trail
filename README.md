@@ -9,7 +9,7 @@
 
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
 
-Rather than modeling single-cell kinetics, L-Trail captures the distributional asymmetry (the "comet tail" effect) of cell populations within high-dimensional spaces (e.g., PCA) using L-moments. This provides a robust estimation of cluster-level trajectories based purely on static expression states.
+Rather than modeling single-cell kinetics, L-Trail captures the distributional asymmetry ("comet tail") of cell populations within high-dimensional spaces (e.g., PCA) using L-moments. This provides a robust estimation of cluster-level trajectories based purely on static expression states.
 
 ## Key Features
 * **Macroscopic Trajectory Inference**: Unlike RNA velocity, which models single-cell kinetics, L-Trail focuses on the macroscopic dynamics of cell populations. It infers the directional transition vectors for entire cell clusters based on their spatial distribution.
