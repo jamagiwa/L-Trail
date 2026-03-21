@@ -16,6 +16,14 @@ Rather than modeling single-cell kinetics, L-Trail captures the distributional a
 * **Splicing-Independent**: Because it relies entirely on the geometric asymmetry of the data (the "comet tail" effect) rather than mRNA splicing kinetics, L-Trail can be applied directly to standard, static gene expression matrices without the need for unspliced reads.
 * **Robustness against Noise**: Single-cell data is inherently sparse and noisy. Instead of conventional central moments (e.g., Pearson's skewness) which are susceptible to outliers, L-Trail utilizes L-moments—linear combinations of order statistics. This provides a robust estimation of directional biases, mitigating the impact of technical noise.
 
+## Scope and Limitations
+When applying L-Trail, consider the following algorithmic and structural constraints:
+
+* **Sample Size Dependency**: L-moment estimation relies on sample statistics; therefore, larger cluster sizes yield more stable vectors. While a minimum of 30 cells is often used as a practical threshold, there is no strict mathematical minimum. Small clusters may produce unreliable directional vectors.
+* **Clustering Resolution**: The algorithm evaluates the geometric shape of an entire cell cluster. Over-clustering or the use of algorithms that impose artificial boundaries can fragment the continuous "comet tail" distribution, altering the structural asymmetry and degrading estimation accuracy.
+* **Linear Space Requirement**: Because L-Trail computes directional vectors using linear combinations of moments, calculations must be performed within a linear high-dimensional space (default: top 30 principal components). Computing vectors directly within non-linear embeddings (e.g., UMAP or t-SNE) introduces spatial distortions and is mathematically invalid.
+* **Continuous Manifold Assumption**: The geometric inference assumes the presence of an underlying continuous data manifold. The algorithm estimates macroscopic trends within connected, progressing populations and cannot infer developmental trajectories across discrete or disconnected cell states.
+
 ## Installation
 
 Currently, L-Trail can be installed by cloning this repository.
