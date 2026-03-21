@@ -36,11 +36,11 @@ pip install -r requirements.txt
 
 ## Dependencies
 Python >= 3.8
-numpy, pandas, scipy, scikit-learn, scanpy, anndata, scvelo, leidenalg
+`numpy`, `pandas`, `scipy`, `scikit-learn`, `scanpy`, `anndata`, `scvelo`, `leidenalg`
 
 ## Quick Start & Tutorial
 We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
-[Interactive Colab Tutorial] You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
+[(https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb)] You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
 
 Basic Usage Example
 ```python
