@@ -14,7 +14,7 @@ Rather than modeling single-cell kinetics, L-Trail captures the distributional a
 ## Key Features
 * **Macroscopic Trajectory Inference**: Unlike RNA velocity, which models single-cell kinetics, L-Trail focuses on the macroscopic dynamics of cell populations. It infers the directional transition vectors for entire cell clusters based on their spatial distribution.
 * **Splicing-Independent**: Because it relies entirely on the geometric asymmetry of the data ("comet tail") rather than mRNA splicing kinetics, L-Trail can be applied directly to standard, static gene expression matrices without the need for unspliced reads.
-* **Robustness against Noise**: Single-cell data is inherently sparse and noisy. Instead of conventional central moments (e.g., Pearson's skewness) which are susceptible to outliers, L-Trail utilizes L-moments—linear combinations of order statistics. This provides a robust estimation of directional biases, mitigating the impact of technical noise.
+* **Robustness against Noise**: Single-cell data is inherently sparse and noisy. Instead of conventional moments (e.g., Pearson's skewness) which are susceptible to outliers, L-Trail utilizes L-moments—linear combinations of order statistics. This provides a robust estimation of directional biases, mitigating the impact of technical noise.
 
 ## Scope and Limitations
 When applying L-Trail, consider the following algorithmic and structural constraints:
