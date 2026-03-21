@@ -29,18 +29,18 @@ When applying L-Trail, consider the following algorithmic and structural constra
 Currently, L-Trail can be installed by cloning this repository.
 
 ```bash
-git clone [https://github.com/jamagiwa/L-Trail.git](https://github.com/jamagiwa/L-Trail.git)
+git clone https://github.com/jamagiwa/L-Trail.git
 cd L-Trail
 pip install -r requirements.txt
 ```
 
 ## Dependencies
-Python >= 3.8
-`numpy`, `pandas`, `scipy`, `scikit-learn`, `scanpy`, `anndata`, `scvelo`, `leidenalg`
+* Python >= 3.8
+* `numpy`, `pandas`, `scipy`, `scikit-learn`, `scanpy`, `anndata`, `scvelo`, `leidenalg`
 
 ## Quick Start & Tutorial
 We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
-[Interactive Colab Tutorial](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb)You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
+[Interactive Colab Tutorial](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the demonstration of the Pancreas dataset directly in your browser without any local setup:
 
 Basic Usage Example
 ```python
@@ -76,5 +76,10 @@ ltrail/tl.py: Core algorithms for L-moment computation and vector estimation.
 
 ltrail/pl.py: Functions for visualizing L-Trail vectors on 2D embeddings (e.g., PCA, UMAP).
 
+## Citation
+A manuscript describing L-Trail is currently in preparation. In the meantime, if you use this tool in your research, please cite this GitHub repository:
+
+> Yamagiwa, T. (2026). L-Trail: Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments. GitHub repository. https://github.com/jamagiwa/L-Trail
+> 
 ## Licence
 This project is licensed under the MIT License - see the LICENSE file for details.
