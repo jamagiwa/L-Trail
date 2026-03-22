@@ -5,8 +5,8 @@
 
 <p align="center">
 
-<img width="540" height="350" alt="image" src=https://github.com/user-attachments/files/26160247/readme/>
-  
+
+
 </p>
 
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
