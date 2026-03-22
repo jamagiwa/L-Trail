@@ -5,7 +5,7 @@
 
 <p align="center">
     
-  <img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/readme.pdf" />
+  <img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/README.png" />
   
 </p>
 
