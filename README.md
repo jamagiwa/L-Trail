@@ -4,10 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-
-
-
+    
+  <img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/readme.pdf" />
+  
 </p>
+
 
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
 
