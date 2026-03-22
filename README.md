@@ -4,9 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-    
-  <img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/README.png" />
-  
+
+<img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/readme.png" />
 </p>
 
 
