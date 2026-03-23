@@ -44,9 +44,12 @@ pip install -r requirements.txt
 
 
 ## Quick Start & Tutorial
-We provide a Jupyter Notebook to demonstrate the basic usage of L-Trail, from data preprocessing to trajectory inference and visualization.
-* [Interactive Colab Tutorial](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the demonstration of the Pancreas dataset directly in your browser without any local setup.
 
+
+## Basic Usage & Reproducibility
+
+We provide a Jupyter Notebook to reproduce the analysis of the Pancreas dataset presented in our preprint.
+* [Interactive Colab: Pancreas Dataset Reproduction](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the code to reproduce the L-Trail results and visualizations for the Pancreas dataset directly in your browser without any local setup.
 Basic Usage Example
 ```python
 import scanpy as sc
