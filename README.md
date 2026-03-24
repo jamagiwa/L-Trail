@@ -1,6 +1,6 @@
 # L-Trail: Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/quickstart.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
@@ -48,9 +48,10 @@ pip install -r requirements.txt
 
 ## Basic Usage & Reproducibility
 
-We provide a Jupyter Notebook to reproduce the analysis of the Pancreas dataset presented in our preprint.
-* [Interactive Colab: Pancreas Dataset Reproduction](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/Pancreas_dataset.ipynb): You can run the code to reproduce the L-Trail results and visualizations for the Pancreas dataset directly in your browser without any local setup.
-Basic Usage Example
+We provide a beginner-friendly Jupyter Notebook demonstrating how to apply L-Trail to the Pancreas dataset. This brief tutorial takes about 3-5 minutes and walks you through data loading, computing L-moment vectors, and visualizing the macroscopic trajectories alongside scVelo.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/quickstart.ipynb) **[Interactive Colab: L-Trail Quick Start]** Run the tutorial directly in your browser without any local environmental setup. It is the fastest way to understand how L-Trail works.
+
 ```python
 import scanpy as sc
 import sys
