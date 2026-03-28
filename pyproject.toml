@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ltrail"
+version = "1.0.0"
+description = "Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments"
+readme = "README.md"
+requires-python = ">=3.8"
+# ここは一般ユーザー向けに「>=」や「~=」を使用し、環境破壊を防ぐ
+dependencies = [
+    "numpy>=2.0.2",
+    "pandas>=2.3.3",
+    "scipy>=1.16.3",
+    "matplotlib>=3.10.0",
+    "scikit-learn>=1.6.1",
+    "anndata>=0.12.10",
+    "scanpy>=1.12.0",
+    "scvelo>=0.3.4",
+    "leidenalg>=0.11.0",
+    "igraph>=1.0.0",
+    "scikit-misc>=0.5.2"
+]
