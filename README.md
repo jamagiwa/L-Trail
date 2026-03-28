@@ -28,11 +28,18 @@ When applying L-Trail, consider the following algorithmic and structural constra
 * **Continuous Manifold Assumption**: The geometric inference assumes the presence of an underlying continuous data manifold. The algorithm estimates macroscopic trends within connected, progressing populations and cannot infer developmental trajectories across discrete or disconnected cell states.
 
 ## Installation
-
-Currently, L-Trail can be installed by cloning this repository.
+**For general usage (Recommended)**:
+Install L-Trail directly as Python package. This will flecibly install the required dependencies without
+strictly breaking your current environment.
 
 ```bash
-git clone https://github.com/jamagiwa/L-Trail.git
+pip install git+https://github.com/jamagiwa/L-Trail.git
+```
+
+For reproducing the bioRxiv paper (Ver.1):
+To strictly reproduce the figures and results from the manuscript, clone the repository and install the exact package versions.
+```bash
+git clone -b v1.0.0 https://github.com/jamagiwa/L-Trail.git
 cd L-Trail
 pip install -r requirements.txt
 ```
