@@ -3,12 +3,17 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/quickstart.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<p align="center">
+<table>
+ <tr>
+    <td><img width="400" alt="Figure 1: L-Trail Conceptual Overview" src="figures/ltrail_gainen.png"/>
+    <td><img width="500" alt="Figure 1: L-Trail scv pancreas dataset" src="figures/readme.png"/>
+ </tr>
 
-<img width="540" alt="Figure 1: L-Trail Conceptual Overview" src="figures/readme.png" />
-</p>
-
-
+ <tr>
+    <td align="center">L-Trail Concept</td>
+    <td align="center">L-Trail scv pancreas dataset</td>
+ </tr>    
+</table>
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
 
 Rather than modeling single-cell kinetics, L-Trail captures the distributional asymmetry ("comet tail") of cell populations within high-dimensional spaces (e.g., PCA) using L-moments. This provides a robust estimation of cluster-level trajectories based purely on static expression states.
