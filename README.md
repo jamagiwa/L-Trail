@@ -3,17 +3,9 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jamagiwa/L-Trail/blob/main/tutorials/quickstart.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<table>
- <tr>
-    <td><img width="400" alt="Figure 1: L-Trail Conceptual Overview" src="figures/ltrail_gainen.png"/>
-    <td><img width="500" alt="Figure 1: L-Trail scv pancreas dataset" src="figures/readme.png"/>
- </tr>
-
- <tr>
-    <td align="center">L-Trail Concept</td>
-    <td align="center">L-Trail scv pancreas dataset</td>
- </tr>    
-</table>
+ <p align="center">
+    <img width="550" alt="Figure 1: L-Trail scv pancreas dataset" src="figures/readme.png"/>
+ </pl>
 
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
 
