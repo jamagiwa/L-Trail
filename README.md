@@ -14,6 +14,7 @@
     <td align="center">L-Trail scv pancreas dataset</td>
  </tr>    
 </table>
+
 **L-Trail** is a statistical toolkit designed to infer the macroscopic transition trends of cell clusters in single-cell RNA sequencing (scRNA-seq) data.
 
 Rather than modeling single-cell kinetics, L-Trail captures the distributional asymmetry ("comet tail") of cell populations within high-dimensional spaces (e.g., PCA) using L-moments. This provides a robust estimation of cluster-level trajectories based purely on static expression states.
