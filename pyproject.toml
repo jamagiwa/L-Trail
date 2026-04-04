@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ltrail"
-version = "1.0.0"
+version = "1.0.2"
 description = "Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments"
 readme = "README.md"
 requires-python = ">=3.8"
-# ここは一般ユーザー向けに「>=」や「~=」を使用し、環境破壊を防ぐ
+
 dependencies = [
     "numpy>=2.0.2",
     "pandas>=2.3.3",
