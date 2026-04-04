@@ -127,7 +127,7 @@ def plot_ltrail(adata,
                     title=title,
                     ax=ax,
                     show=False,
-                    frameon=True,
+                    frameon=frameon,
                     alpha=alpha)
 
     print(f"--- Processing Information ---")
@@ -179,7 +179,7 @@ def plot_ltrail(adata,
             dy = end_2d[1] - start_2d[1]
 
             # Remove negligible noisy vectors
-            if np.sqrt(dx**2 + dy**2) < 0.01:
+            if np.sqrt(dx**2 + dy**2) < min_vec_length:
                 continue
 
             # Append to drawing lists
