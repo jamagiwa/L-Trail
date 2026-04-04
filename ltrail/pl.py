@@ -18,6 +18,8 @@ def plot_ltrail(adata,
                p_threshold=0.05,
                n_boot=1000,
                min_cells=30,
+               min_vec_length=0.01,
+               frameon=False,
                legend_loc='right margin',
                figsize=(8, 6),
                dot_size=None,
@@ -58,6 +60,10 @@ def plot_ltrail(adata,
         Number of bootstrap iterations for the permutation test.
     min_cells : int, optional (default: 20)
         Minimum number of cells required in a cluster to calculate its vector.
+    min_vec_length : float, optional (default: 0.01)
+        Minimum vector length to be drawn. Vectors shorter than this will be ignored. 
+    frameon : bool, optional (default: True)
+        Draw a frame around the scatter plot.
     legend_loc : str, optional (default: 'right margin')
         Location of the legend in the scatter plot.
     figsize : tuple, optional (default: (8, 6))
