@@ -93,7 +93,7 @@ pl.plot_ltrail(
 ## Citation
 A manuscript describing L-Trail is currently in preparation. In the meantime, if you use this tool in your research, please cite this GitHub repository:
 
-> Yamagiwa, T. (2026). L-Trail: Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments. GitHub repository. https://github.com/jamagiwa/L-Trail
+> YAMAGIWA, T. (2026). L-Trail: Estimating macroscopic transition directions in scRNA-seq data via outlier-robust L-moments (v1.0). Zenodo. https://doi.org/10.5281/zenodo.19400467
 > 
 ## Licence
 This project is licensed under the MIT License - see the LICENSE file for details.
