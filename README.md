@@ -36,7 +36,7 @@ cd L-Trail
 pip install -r requirements.txt
 ```
 
-For reproducing the bioRxiv paper (Ver.1):
+For reproducing the Zenodo paper (Ver.1):
 To strictly reproduce the figures and results from the manuscript, clone the repository and install the exact package versions.
 ```bash
 git clone -b v1.0.0 https://github.com/jamagiwa/L-Trail.git
