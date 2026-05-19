@@ -31,7 +31,9 @@ Install L-Trail directly as Python package. This will flecibly install the requi
 strictly breaking your current environment.
 
 ```bash
-pip install git+https://github.com/jamagiwa/L-Trail.git
+git clone -b v1.0.4 https://github.com/jamagiwa/L-Trail.git
+cd L-Trail
+pip install -r requirements.txt
 ```
 
 For reproducing the bioRxiv paper (Ver.1):
