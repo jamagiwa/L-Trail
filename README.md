@@ -25,6 +25,12 @@ When applying L-Trail, consider the following algorithmic and structural constra
 * **Linearity Constraint**: Because L-Trail computes directional vectors using linear combinations of moments, the inferred trajectory for a cluster is strictly a linear, straight vector. It cannot model non-linear curved trajectories within a single cluster. Consequently, calculations must be performed exclusively within a linear high-dimensional space (e.g., top 30 principal components). Computing vectors directly within non-linear embeddings (e.g., UMAP or t-SNE) introduces severe spatial distortions and is mathematically invalid.
 * **Continuous Manifold Assumption**: The geometric inference assumes the presence of an underlying continuous data manifold. The algorithm estimates macroscopic trends within connected, progressing populations and cannot infer developmental trajectories across discrete or disconnected cell states.
 
+## Future Plan
+* **Exploring a moment-independent approach**
+Moment-based estimation is limited to unidirectional estimation. Since pseudotime is preserved within the manifold structure, we are currently developing a method to estimate the manifold structure without relying on moments.
+* **Consideration of multiple testing**
+I'm currently learning about multiple testing to see if I need to apply corrections to my directional inferences.
+
 ## Installation
 **For general usage (Recommended)**:
 Install L-Trail directly as Python package. This will flecibly install the required dependencies without
