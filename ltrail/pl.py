@@ -10,6 +10,7 @@ def plot_ltrail(adata,
                 trim = None,
                 scale = 5.0,
                 p_threshold = 0.05,
+                correction = 'bonferroni',
                 n_boot = 10000,
                 min_cells = None,
                 min_vec_length = 0.01,
@@ -27,14 +28,18 @@ def plot_ltrail(adata,
                 ):
   """
   Draw cluster-level L-Trail vectors on a 2D embedding via k-NN projection.
-
+ 
   trim : int, optional (default : DEFAULT_TRIM)
        TL-moment trimming per side. If 'sig_table' is given, Trim is used.
   min_cells : int, optional (default : DEFAULT_MIN_CELLS)
        If 'sig_table' is given, Min_cells is used.
   p_threshold : float or None, optional (default: 0.05)
-       Only used when 'sig_table' is None: vectors with raw p >= p_threshold are hidden (no multiple-testing correction)
-       None : draws every finite vector
+       Significance level. Only used when 'sig_table' is None.
+       None : draws every finite vector (no test).
+  correction : {'bonferroni', 'fdr_bh', None}, optional (default: 'bonferroni')
+       Multiple-testing correction across clusters. Only used when 'sig_table' is None.
+       None : raw p < p_threshold (no correction; not recommended for figures).
+       If 'sig_table' is given, the correction recorded in it is used.
   n_boot : int, optional (default: 10000)
        Only use when 'sig_table' is None.
   sig_table : pd.DataFrame, optional (default : None)
@@ -42,10 +47,11 @@ def plot_ltrail(adata,
        Cluster with Significant == True is draw.
   """
   trim , min_cells = _resolve_params(trim, min_cells)
-
-  # make sig_table
-  corrected = sig_table is not None
-
+ 
+  if correction not in ('bonferroni', 'fdr_bh', None):
+      raise ValueError(f"Unknown correction '{correction}'. Expected 'bonferroni', 'fdr_bh' or None.")
+ 
+  # make sig_table 
   if sig_table is None:
        sig_table = calc_ltrail_significance_table(
            adata, groupby,
@@ -57,10 +63,14 @@ def plot_ltrail(adata,
            min_cells=min_cells,
            random_state=random_state
        )
-       if p_threshold is not None:
-           sig_table['Significant'] = sig_table['P_raw'] < p_threshold
-       else:
+       if p_threshold is None:
            sig_table['Significant'] = np.isfinite(sig_table['Magnitude'].astype(float))
+           sig_table['Correction'] = 'none (no test)'
+       elif correction is None:
+           sig_table['Significant'] = sig_table['P_raw'] < p_threshold
+           sig_table['Correction'] = 'none'
+       else:
+           sig_table = multiple_testing(sig_table, method=correction, alpha=p_threshold)
   else:
     # if sig_tabele used -> sig_table as a priority
     for col, given in (('Trim', trim), ('Min_cells', min_cells)):
@@ -69,40 +79,44 @@ def plot_ltrail(adata,
              if len(used) == 1 and int(used[0]) != given and not (col == 'Trim' and method != 'lmoment'):
                  warnings.warn(f"sig_table was computed with {col}={int(used[0])}, "
                                f"but {given} was given. The sig_table value is used.")
-
+ 
     if 'Trim' in sig_table.columns and sig_table['Trim'].notna().any():
         trim = int(sig_table['Trim'].dropna().iloc[0])
     if 'Significant' not in sig_table.columns:
         raise ValueError("sig_table has no 'Significant' column. Run multiple_testing() first")
-
-    # sig_table のベクトルの次元が n_pcs と合っているか (合わないと kneighbors で落ちる)
+ 
+    # sig_table のベクトルの次元が n_pcs と合っているか
     vec_dims = {len(v) for v in sig_table['Vector'] if v is not None}
     if vec_dims and vec_dims != {n_pcs}:
         raise ValueError(f"sig_table vectors have {sorted(vec_dims)} dims, but n_pcs={n_pcs}. "
                          f"Use the same n_pcs as in calc_ltrail_significance_table().")
-
+ 
   if ax is None:
       fig, ax = plt.subplots(figsize=figsize)
   else:
       fig = ax.get_figure()
-
+ 
   _check_obsm(adata, use_rep, basis)
-
+ 
   X_high = adata.obsm[use_rep][:, :n_pcs]
   X_vis = adata.obsm[basis][:, :2]
   nbrs = NearestNeighbors(n_neighbors=k).fit(X_high)
-
+ 
   #title
   if title is None:
-    if corrected:
-        sig_txt = ", corrected (multiple testing)"
+    used_corr = sig_table['Correction'].iloc[0] if 'Correction' in sig_table.columns and len(sig_table) else 'unknown'
+    alpha_txt = sig_table['Alpha'].iloc[0] if 'Alpha' in sig_table.columns and len(sig_table) else p_threshold
+    if used_corr == 'none (no test)':
+        sig_txt = ", no test"
+    elif used_corr == 'none':
+        sig_txt = f", raw p < {alpha_txt} (uncorrected)"
     else:
-        sig_txt = f", raw p < {p_threshold}" if p_threshold is not None else ""
+        sig_txt = f", {used_corr}-adjusted p < {alpha_txt}"
     trim_txt = f", trim = {trim}" if method == 'lmoment' else ""
     title = f"L-Trail Estimation ({method}{trim_txt}, scale = {scale})\nSpace: {use_rep} -> {basis}{sig_txt}"
-
+ 
   scanpy_basis = basis.replace('X_', '', 1) if basis.startswith('X_') else basis
-
+ 
   sc.pl.embedding(adata,
                   basis=scanpy_basis,
                   color = groupby,
@@ -114,7 +128,7 @@ def plot_ltrail(adata,
                   frameon = frameon,
                   alpha = alpha
                   )
-
+ 
   #message
   print("--- Processing Information ---")
   print(f"method : {method}")
@@ -123,7 +137,7 @@ def plot_ltrail(adata,
   print(f"Min cells : {min_cells}")
   print(f"Input Space : {use_rep}, (Top {n_pcs} PCs)")
   print(f"Output Space : {basis}")
-
+ 
   quiver_X, quiver_Y, quiver_U, quiver_V = [], [], [], []
   for _, row in sig_table[sig_table['Significant'].astype(bool)].iterrows():
       mean_high, vec_high = row['Mean_pos'], row['Vector']
@@ -136,18 +150,18 @@ def plot_ltrail(adata,
      #end is Vector end
       _, idxs_e = nbrs.kneighbors([mean_high + vec_high * scale])
       end_2d = X_vis[idxs_e[0]].mean(axis=0)
-
+ 
       # 2d vector
       dx, dy = end_2d - start_2d
       # hypot() is calc hypotenuse euclid distance
       if np.hypot(dx, dy) < min_vec_length:
           print(f"Hidden {row['Cluster']}: projection length < min_vec_length")
           continue
-
+ 
       quiver_X.append(start_2d[0]); quiver_Y.append(start_2d[1])
       quiver_U.append(dx); quiver_V.append(dy)
       ax.scatter(start_2d[0], start_2d[1], c='#222222', edgecolors='white', linewidths=0.5, s=15, zorder=11)
-
+ 
   if quiver_X:
       print(f"Drawing {len(quiver_X)} vectors...")
       ax.quiver(quiver_X,
@@ -167,11 +181,11 @@ def plot_ltrail(adata,
                 )
   else:
       print('Warning : No vectors to draw. Check thresholds or data')
-
+ 
   if save is not None:
       fig.savefig(save, bbox_inches='tight')
       print(f"Saved figure to : {save}")
-
+ 
   if show:
       plt.show()
       return None
