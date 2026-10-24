@@ -28,7 +28,7 @@ def plot_ltrail(adata,
                 ):
   """
   Draw cluster-level L-Trail vectors on a 2D embedding via k-NN projection.
- 
+
   trim : int, optional (default : DEFAULT_TRIM)
        TL-moment trimming per side. If 'sig_table' is given, Trim is used.
   min_cells : int, optional (default : DEFAULT_MIN_CELLS)
@@ -47,11 +47,11 @@ def plot_ltrail(adata,
        Cluster with Significant == True is draw.
   """
   trim , min_cells = _resolve_params(trim, min_cells)
- 
+
   if correction not in ('bonferroni', 'fdr_bh', None):
       raise ValueError(f"Unknown correction '{correction}'. Expected 'bonferroni', 'fdr_bh' or None.")
- 
-  # make sig_table 
+
+  # make sig_table
   if sig_table is None:
        sig_table = calc_ltrail_significance_table(
            adata, groupby,
@@ -79,29 +79,29 @@ def plot_ltrail(adata,
              if len(used) == 1 and int(used[0]) != given and not (col == 'Trim' and method != 'lmoment'):
                  warnings.warn(f"sig_table was computed with {col}={int(used[0])}, "
                                f"but {given} was given. The sig_table value is used.")
- 
+
     if 'Trim' in sig_table.columns and sig_table['Trim'].notna().any():
         trim = int(sig_table['Trim'].dropna().iloc[0])
     if 'Significant' not in sig_table.columns:
         raise ValueError("sig_table has no 'Significant' column. Run multiple_testing() first")
- 
+
     # sig_table のベクトルの次元が n_pcs と合っているか
     vec_dims = {len(v) for v in sig_table['Vector'] if v is not None}
     if vec_dims and vec_dims != {n_pcs}:
         raise ValueError(f"sig_table vectors have {sorted(vec_dims)} dims, but n_pcs={n_pcs}. "
                          f"Use the same n_pcs as in calc_ltrail_significance_table().")
- 
+
   if ax is None:
       fig, ax = plt.subplots(figsize=figsize)
   else:
       fig = ax.get_figure()
- 
+
   _check_obsm(adata, use_rep, basis)
- 
+
   X_high = adata.obsm[use_rep][:, :n_pcs]
   X_vis = adata.obsm[basis][:, :2]
   nbrs = NearestNeighbors(n_neighbors=k).fit(X_high)
- 
+
   #title
   if title is None:
     used_corr = sig_table['Correction'].iloc[0] if 'Correction' in sig_table.columns and len(sig_table) else 'unknown'
@@ -114,9 +114,9 @@ def plot_ltrail(adata,
         sig_txt = f", {used_corr}-adjusted p < {alpha_txt}"
     trim_txt = f", trim = {trim}" if method == 'lmoment' else ""
     title = f"L-Trail Estimation ({method}{trim_txt}, scale = {scale})\nSpace: {use_rep} -> {basis}{sig_txt}"
- 
+
   scanpy_basis = basis.replace('X_', '', 1) if basis.startswith('X_') else basis
- 
+
   sc.pl.embedding(adata,
                   basis=scanpy_basis,
                   color = groupby,
@@ -128,7 +128,7 @@ def plot_ltrail(adata,
                   frameon = frameon,
                   alpha = alpha
                   )
- 
+
   #message
   print("--- Processing Information ---")
   print(f"method : {method}")
@@ -137,7 +137,7 @@ def plot_ltrail(adata,
   print(f"Min cells : {min_cells}")
   print(f"Input Space : {use_rep}, (Top {n_pcs} PCs)")
   print(f"Output Space : {basis}")
- 
+
   quiver_X, quiver_Y, quiver_U, quiver_V = [], [], [], []
   for _, row in sig_table[sig_table['Significant'].astype(bool)].iterrows():
       mean_high, vec_high = row['Mean_pos'], row['Vector']
@@ -150,18 +150,18 @@ def plot_ltrail(adata,
      #end is Vector end
       _, idxs_e = nbrs.kneighbors([mean_high + vec_high * scale])
       end_2d = X_vis[idxs_e[0]].mean(axis=0)
- 
+
       # 2d vector
       dx, dy = end_2d - start_2d
       # hypot() is calc hypotenuse euclid distance
       if np.hypot(dx, dy) < min_vec_length:
           print(f"Hidden {row['Cluster']}: projection length < min_vec_length")
           continue
- 
+
       quiver_X.append(start_2d[0]); quiver_Y.append(start_2d[1])
       quiver_U.append(dx); quiver_V.append(dy)
       ax.scatter(start_2d[0], start_2d[1], c='#222222', edgecolors='white', linewidths=0.5, s=15, zorder=11)
- 
+
   if quiver_X:
       print(f"Drawing {len(quiver_X)} vectors...")
       ax.quiver(quiver_X,
@@ -181,27 +181,27 @@ def plot_ltrail(adata,
                 )
   else:
       print('Warning : No vectors to draw. Check thresholds or data')
- 
+
   if save is not None:
       fig.savefig(save, bbox_inches='tight')
       print(f"Saved figure to : {save}")
- 
+
   if show:
       plt.show()
       return None
   return fig
 
-def plot_knn_similarity(adata, 
-                        df_results: pd.DataFrame, 
-                        basis: str = 'X_pca', 
-                        title: str = None, 
-                        figsize: tuple = (8, 6), 
-                        show : bool = True, 
+def plot_knn_similarity(adata,
+                        df_results: pd.DataFrame,
+                        basis: str = 'X_pca',
+                        title: str = None,
+                        figsize: tuple = (8, 6),
+                        show : bool = True,
                         ):
-  
+
   """
   Visualize the k-NN  similarity on a low-dimensional embedding space.
-  
+
   Parameter
   ----------
   adata : Anndata
@@ -235,12 +235,12 @@ def plot_knn_similarity(adata,
   if basis not in adata.obsm:
       raise ValueError(f"'{basis}' not found in adata.obsm.")
   coords_bg = adata.obsm[basis][:, :2]
-  ax.scatter(coords_bg[:, 0], 
-             coords_bg[:, 1], 
-             c = 'lightgray', 
-             alpha = 0.2, 
-             s = 10, 
-             zorder = 1, 
+  ax.scatter(coords_bg[:, 0],
+             coords_bg[:, 1],
+             c = 'lightgray',
+             alpha = 0.2,
+             s = 10,
+             zorder = 1,
              )
 
 
@@ -248,29 +248,29 @@ def plot_knn_similarity(adata,
   # Center_X/Y は calc_knn_similarity の use_rep (通常 PCA) の座標なので、
   # basis が UMAP などのときにずれる。Anchor_Index から basis の座標を取り直す。
   anchor_xy = coords_bg[df_results['Anchor_Index'].to_numpy(dtype=int)]
-  scat = ax.scatter(anchor_xy[:, 0], 
-                    anchor_xy[:, 1], 
-                    c = df_results['Cos_Similarity'], 
-                    cmap = 'coolwarm', 
-                    vmin = -1.0, 
-                    vmax = 1.0, 
-                    s = 30, 
-                    edgecolor = 'black', 
-                    linewidth = 0.5, 
+  scat = ax.scatter(anchor_xy[:, 0],
+                    anchor_xy[:, 1],
+                    c = df_results['Cos_Similarity'],
+                    cmap = 'coolwarm',
+                    vmin = -1.0,
+                    vmax = 1.0,
+                    s = 30,
+                    edgecolor = 'black',
+                    linewidth = 0.5,
                     zorder = 2
                     )
-  
+
   #Add colorbar
-  plt.colorbar(scat, 
-               ax = ax, 
+  plt.colorbar(scat,
+               ax = ax,
                label = 'Cosine similarity (Velocity vs L-Trail)')
-  
+
   #Title
   if title:
       ax.set_title(title)
   else:
       ax.set_title("k-NN based Vector Similarity")
-  
+
   #Set axis labels
   scanpy_basis = basis.replace('X_', '') if basis.startswith('X_') else basis
   ax.set_xlabel(f"{scanpy_basis}1")
@@ -279,135 +279,186 @@ def plot_knn_similarity(adata,
   if show:
       plt.show()
       return None
-  
+
   return ax
 
-def boxplot_similarity(adata, 
-                      df_results: pd.DataFrame, 
-                      groupby: str = 'clusters', 
-                      title: str = None, 
-                      figsize: tuple = (10, 6), 
-                      ylim: tuple = None, 
-                      show: bool = True
-                      ):
+ #要検討
+def random_direction_null(n_dims: int, n_draw: int = 100_000, q=(0.025, 0.975), seed: int = 0):
     """
+    n_dims 次元のランダムな方向どうしの cos の分位点 (既定は 95% 範囲)。
+    観測された cos がこの範囲に入るなら、ランダムな矢印と区別できない。
+    """
+    rng = np.random.default_rng(seed)
+    a = rng.normal(size=(n_draw, n_dims)); b = rng.normal(size=(n_draw, n_dims))
+    c = np.sum(a * b, 1) / (np.linalg.norm(a, axis=1) * np.linalg.norm(b, axis=1))
+    return tuple(float(x) for x in np.quantile(c, q))
  
-    This function visualizes the distribution of cosine similarities between RNA velocity
-    and L-Trail vectors across different cell clusters. It automatically calculates and
-    displays the sample size (n) and median value for each cluster on the x-axis labels.
+
+def boxplot_similarity(adata,
+                       df_results: pd.DataFrame = None,
+                       groupby: str = 'clusters',
+                       title: str = None,
+                       figsize: tuple = (10, 6),
+                       ylim: tuple = (-1.05, 1.05),
+                       show: bool = True,
+                       df_cluster: pd.DataFrame = None,
+                       sig_table: pd.DataFrame = None,
+                       order='auto',
+                       show_null: bool = True,
+                       n_pcs: int = None,
+                       ):
+    """
+    Cosine similarity between RNA velocity and L-Trail vectors, per cluster:
+    k-NN neighborhoods (violin + box) and/or the cluster-level value (one marker per cluster).
  
     Parameters
     ----------
     adata : AnnData
-        Annotated data matrix containing the single-cell dataset.
-    df_results : pd.DataFrame
-        DataFrame containing the local similarity results, typically generated by `calc_knn_similarity`.
-        Must contain the 'Anchor_Index' column.
+    df_results : pd.DataFrame or None
+        Output of calc_knn_similarity() (needs 'Anchor_Index'). Drawn as violin + box.
     groupby : str, optional (default: 'clusters')
-        Key in `adata.obs` defining the clusters to group the similarities by.
-    title : str, optional (default: None)
-        Title of the plot.
+    title : str, optional
     figsize : tuple, optional (default: (10, 6))
-        Width and height of the figure in inches.
-    ylim : tuple, optional (default: None)
-        Y-axis limits. For cosine similarity, (-1.0, 1.0) or (-1.1, 1.1) is recommended.
+    ylim : tuple, optional (default: (-1.05, 1.05))
     show : bool, optional (default: True)
-        Whether to display the figure immediately. If False, returns the Axes object.
+        If False, returns the Axes object.
+    df_cluster : pd.DataFrame or None
+        Output of calc_velocity_ltrail_similarity(). Drawn as one diamond per cluster.
+    sig_table : pd.DataFrame or None
+        Output of calc_ltrail_significance_table() + multiple_testing(). If given, the
+        cluster-level marker is filled for significant clusters and open otherwise.
+    order : 'auto' | 'cluster' | 'knn' | 'category' | list, optional (default: 'auto')
+        'auto' sorts by the cluster-level cosine if df_cluster is given, else by the k-NN median.
+        'category' keeps the order of adata.obs[groupby].
+    show_null : bool, optional (default: True)
+        Shade the 95% range of the cosine between two random directions in n_pcs dimensions.
+    n_pcs : int or None
+        Dimensionality for the null range. Defaults to df_cluster['N_pcs'] (or 30).
  
     Returns
     -------
     ax : matplotlib.axes.Axes or None
-        Returns the matplotlib Axes object if `show=False`, else returns None.
     """
-    # 1. Set plot style
-    sns.set_style("ticks")
- 
-    df_plot = df_results.copy()
- 
-    # Data validation
-    if 'Anchor_Index' not in df_plot.columns:
-        print("Error: 'Anchor_Index' column not found in df_results.")
-        return
+    if df_results is None and df_cluster is None:
+        raise ValueError("Give df_results (k-NN), df_cluster (cluster level), or both.")
     if groupby not in adata.obs:
-        print(f"Error: '{groupby}' not found in adata.obs.")
-        return
+        raise ValueError(f"'{groupby}' not found in adata.obs.")
  
-    # Map cluster information from adata to the results DataFrame
-    try:
-        indices = df_plot['Anchor_Index'].values.astype(int)
-        cluster_labels = adata.obs[groupby].iloc[indices].values
-        df_plot['Cluster'] = cluster_labels
-    except Exception as e:
-        print(f"Error mapping clusters: {e}")
-        return
+    # --- k-NN: アンカー細胞をクラスタに対応づける
+    knn = None
+    if df_results is not None:
+        if 'Anchor_Index' not in df_results.columns:
+            raise ValueError("'Anchor_Index' column not found in df_results.")
+        knn = df_results[['Anchor_Index', 'Cos_Similarity']].copy()
+        knn['Cluster'] = adata.obs[groupby].iloc[knn['Anchor_Index'].to_numpy(dtype=int)].astype(str).to_numpy()
+        knn_stats = knn.groupby('Cluster')['Cos_Similarity'].agg(['count', 'median'])
+    else:
+        knn_stats = pd.DataFrame(columns=['count', 'median'])
  
-    # Calculate summary statistics to order the plot by median (descending)
-    summary_stats = df_plot.groupby('Cluster', observed=True)['Cos_Similarity'].agg(['count', 'median']).sort_values(by='median', ascending=False)
-    median_order = summary_stats.index
+    # --- クラスタ単位の値
+    clus = pd.Series(dtype=float)
+    if df_cluster is not None:
+        clus = df_cluster.assign(Cluster=df_cluster['Cluster'].astype(str)).set_index('Cluster')['Cos_Similarity']
+    sig_set = None
+    if sig_table is not None:
+        if 'Significant' not in sig_table.columns:
+            raise ValueError("sig_table has no 'Significant' column. Run multiple_testing() first.")
+        sig_set = set(sig_table.loc[sig_table['Significant'].astype(bool), 'Cluster'].astype(str))
  
-    if len(median_order) == 0:
+    # --- 並び順 (どちらか一方にしかないクラスタも含める)
+    g = adata.obs[groupby]
+    categories = [str(c) for c in (g.cat.categories if hasattr(g, 'cat') else pd.unique(g))]
+    present = [c for c in categories if c in set(knn_stats.index) | set(clus.index)]
+    if isinstance(order, (list, tuple)):
+        clusters = [str(c) for c in order]
+    elif order == 'category':
+        clusters = present
+    elif order == 'cluster' or (order == 'auto' and df_cluster is not None):
+        clusters = sorted(present, key=lambda c: -np.nan_to_num(clus.get(c, np.nan), nan=-9))
+    elif order in ('knn', 'auto'):
+        clusters = sorted(present, key=lambda c: -np.nan_to_num(knn_stats['median'].get(c, np.nan), nan=-9))
+    else:
+        raise ValueError(f"Unknown order '{order}'.")
+    if not clusters:
         print("Warning: No data to plot.")
-        return
+        return None
  
+    sns.set_style("ticks")
     fig, ax = plt.subplots(figsize=figsize)
+    x = np.arange(len(clusters))
+    handles = []
  
-    # Violin plot (background distribution)
-    sns.violinplot(
-        data=df_plot,
-        x='Cluster',
-        y='Cos_Similarity',
-        order=median_order,
-        inner=None,
-        color='lightgray',
-        linewidth=0,
-        alpha=0.4,
-        ax=ax
-    )
+    # --- ランダム方向の帰無範囲
+    if show_null:
+        if n_pcs is None:
+            n_pcs = int(df_cluster['N_pcs'].iloc[0]) if df_cluster is not None and 'N_pcs' in df_cluster else 30
+        lo, hi = random_direction_null(n_pcs)
+        handles.append(ax.axhspan(lo, hi, color='#bdbdbd', alpha=0.35, lw=0, zorder=0,
+                                  label=f'Random-direction 95% range ({n_pcs} dims)'))
+    ax.axhline(0, color='#555555', linestyle='--', linewidth=1, zorder=1)
  
-    # Box plot (foreground statistics)
-    sns.boxplot(
-        data=df_plot,
-        x='Cluster',
-        y='Cos_Similarity',
-        order=median_order,
-        width=0.25,
-        color='#4C72B0',
-        showfliers=False,
-        linewidth=1.2,
-        ax=ax
-    )
+    # --- k-NN の分布 (violin + box)
+    if knn is not None:
+        data = [knn.loc[knn['Cluster'] == c, 'Cos_Similarity'].dropna().to_numpy() for c in clusters]
+        has = [i for i, d in enumerate(data) if len(d) > 1]
+        if has:
+            vp = ax.violinplot([data[i] for i in has], positions=x[has], widths=0.8,
+                               showextrema=False)
+            for b in vp['bodies']:
+                b.set_facecolor('#d9d9d9'); b.set_edgecolor('none'); b.set_alpha(0.6); b.set_zorder(2)
+            bp = ax.boxplot([data[i] for i in has], positions=x[has], widths=0.25, showfliers=False,
+                            patch_artist=True, zorder=3,
+                            boxprops=dict(facecolor='#2a78d6', edgecolor='#1c5cab', alpha=0.85),
+                            medianprops=dict(color='white', linewidth=1.5),
+                            whiskerprops=dict(color='#1c5cab'), capprops=dict(color='#1c5cab'))
+            from matplotlib.patches import Patch
+            handles.append(Patch(facecolor='#2a78d6', edgecolor='#1c5cab',
+                                 label='k-NN neighborhoods (one value per anchor cell)'))
  
-    # Draw reference line at 0 (orthogonal vectors)
-    ax.axhline(0, color='#333333', linestyle='--', linewidth=1, alpha=0.8)
+    # --- クラスタ単位 (1 クラスタ 1 点)
+    if df_cluster is not None:
+        y = np.array([clus.get(c, np.nan) for c in clusters], dtype=float)
+        filled = np.array([sig_set is None or c in sig_set for c in clusters])
+        ax.scatter(x[filled], y[filled], marker='D', s=70, color='#eb6834', edgecolor='white',
+                   linewidth=1.0, zorder=5)
+        ax.scatter(x[~filled], y[~filled], marker='D', s=70, facecolor='white', edgecolor='#eb6834',
+                   linewidth=1.5, zorder=5)
+        from matplotlib.lines import Line2D
+        lab = 'Cluster level (one value per cluster)'
+        handles.append(Line2D([], [], marker='D', ls='none', markersize=8, color='#eb6834',
+                              markeredgecolor='white', label=lab + (', significant' if sig_set is not None else '')))
+        if sig_set is not None:
+            handles.append(Line2D([], [], marker='D', ls='none', markersize=8, markerfacecolor='white',
+                                  markeredgecolor='#eb6834', label='Cluster level, not significant'))
  
-    # Set title and axis labels
-    if title:
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=15)
- 
-    ax.set_ylabel('Cosine similarity', fontsize=12, fontweight='bold')
-    ax.set_xlabel('Cell groups', fontsize=12, fontweight='bold')
- 
-    # Append n-count and median to X-axis labels
-    new_labels = []
-    for cluster in median_order:
-        count = int(summary_stats.loc[cluster, 'count'])
-        median_val = summary_stats.loc[cluster, 'median']
-        new_labels.append(f"{cluster}\n(n={count})\nMed: {median_val:.2f}")
- 
-    ax.set_xticks(range(len(median_order)))
-    ax.set_xticklabels(new_labels, rotation=45, ha='right', fontsize=10)
-    ax.tick_params(axis='y', labelsize=10)
- 
-    # Remove top and right spines
-    sns.despine(ax=ax)
- 
+    # --- 軸ラベル (k-NN の n と中央値、クラスタ単位の値)
+    labels = []
+    for c in clusters:
+        parts = [c]
+        if knn is not None:
+            if c in knn_stats.index:
+                parts.append(f"k-NN med {knn_stats.loc[c, 'median']:.2f} (n={int(knn_stats.loc[c, 'count'])})")
+            else:
+                parts.append("k-NN: no anchors")
+        if df_cluster is not None:
+            v = clus.get(c, np.nan)
+            parts.append(f"cluster {v:.2f}" if np.isfinite(v) else "cluster: n/a")
+        labels.append("\n".join(parts))
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=45, ha='right', fontsize=9)
+    ax.set_xlim(-0.6, len(clusters) - 0.4)
+    ax.set_ylabel('Cosine similarity (velocity vs L-Trail)', fontsize=11)
+    ax.set_xlabel('')
     if ylim:
         ax.set_ylim(ylim)
- 
-    plt.tight_layout()
+    ax.grid(True, axis='y', color='#e5e5e5', linewidth=0.6); ax.set_axisbelow(True)
+    sns.despine(ax=ax)
+    ax.legend(handles=handles, loc='lower left', bbox_to_anchor=(0, 1.01), ncol=2, frameon=False, fontsize=9)
+    if title:
+        ax.set_title(title, fontsize=13, pad=48 if handles else 12)
+    fig.tight_layout()
  
     if show:
         plt.show()
         return None
- 
     return ax
