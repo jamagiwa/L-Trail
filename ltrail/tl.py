@@ -345,38 +345,51 @@ def calc_ltrail_significance_table(adata,
                                    return pd.DataFrame(results)
 
 
+def _bh_adjust(p: np.ndarray) -> np.ndarray:
+    """Benjamini-Hochberg の補正後 p 値 (statsmodels の fdr_bh と同じ値)。 要検討"""
+    p = np.asarray(p, dtype=float)
+    m = p.size
+    order = np.argsort(p)
+    ranked = p[order] * m / np.arange(1, m + 1)
+    adj = np.minimum.accumulate(ranked[::-1])[::-1]       # 後ろから累積最小
+    out = np.empty(m)
+    out[order] = np.minimum(adj, 1.0)
+    return out
 
-def multiple_testing(df: pd.DataFrame,
-                     p_col: str = 'P_raw',
-                     method: str = 'bonferroni',
-                     alpha: float = 0.05,
-                     ) -> pd.DataFrame:
 
-                     """
-                     add P_adj and Significant in calc_ltrail_significance_table()
-                     m is not NaN P_raw row.
-                       boneferroni : p_adj = min(1, P_raw * m)
-                       fdr_bh : Benjamini-Hochberg
-                     """
-                     df = df.copy()
-                     valid = df[p_col].notna()
-                     m = int(valid.sum())
-                     df['P_adj'] = np.nan
-
-                     if m == 0:
-                         df['Significant'] = False
-                         return df
-
-                     if method == 'bonferroni':
-                         #if minimum > 1 -> minimum = 1 ...normalize
-                         df.loc[valid, 'P_adj'] = np.minimum(df.loc[valid, p_col] * m, 1.0)
-                     elif method == 'fdr_bh':
-                         _, p_adj, _, _ = multipletests(df.loc[valid, p_col], alpha=alpha, method='fdr_bh')
-                         df.loc[valid, 'P_adj'] = p_adj
-                     else:
-                         raise ValueError(f"Unknown method '{method}'")
-
-                     df['Significant'] = df['P_adj'] < alpha #Nan < alpha is False
-                     print(f"[multiple_testing], method ={method}, m={m}, alpha = {alpha}"
-                           f"-> int{int(df['Significant'].sum())} significant clusters")
-                     return df
+def multiple_testing(
+    df: pd.DataFrame,
+    p_col: str = 'P_raw',
+    method: str = 'bonferroni',
+    alpha: float = 0.05,
+) -> pd.DataFrame:
+    """
+　　add P_adj and Significant in calc_ltrail_significance_table()
+　　m is not NaN P_raw row.
+　　boneferroni : p_adj = min(1, P_raw * m)
+　　fdr_bh : Benjamini-Hochberg
+    """
+    df = df.copy()
+    valid = df[p_col].notna()
+    m = int(valid.sum())
+    df['P_adj'] = np.nan
+ 
+    if m == 0:
+        df['Significant'] = False
+        df['Correction'] = method
+        df['Alpha'] = alpha
+        return df
+ 
+    if method == 'bonferroni':
+        df.loc[valid, 'P_adj'] = np.minimum(df.loc[valid, p_col] * m, 1.0)
+    elif method == 'fdr_bh':
+        df.loc[valid, 'P_adj'] = _bh_adjust(df.loc[valid, p_col].to_numpy(dtype=float))
+    else:
+        raise ValueError(f"Unknown method '{method}'. Expected 'bonferroni' or 'fdr_bh'.")
+ 
+    df['Significant'] = df['P_adj'] < alpha     # NaN < alpha は False
+    df['Correction'] = method                   
+    df['Alpha'] = alpha
+    print(f"[multiple_testing] method={method}, m={m} tests, alpha={alpha} "
+          f"-> {int(df['Significant'].sum())} significant clusters")
+    return df
